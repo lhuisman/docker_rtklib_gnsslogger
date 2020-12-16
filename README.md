@@ -1,7 +1,7 @@
 # docker_rtklib_gnsslogger
 A docker repository to log data form a GNSS receiver using RTKLIB str2str tool and convert in to Hatanaka compressed RINEX using RTKLIB convbin and RNXCMP crx2rnx.  
 
-## Configuratioon using Environment file
+## Configuration using Environment file
 See ublox.env and rtcm3.env for an example
 
 ## Docker commands
