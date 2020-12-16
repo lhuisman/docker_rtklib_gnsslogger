@@ -1,0 +1,2 @@
+#!/bin/bash
+str2str -f 0 -in serial://$DEVICE -out file:///$RAWOUTPATH/%Y/%n/%h/$HM%Y%n%h%M.$EXTENSION::S=0.25 

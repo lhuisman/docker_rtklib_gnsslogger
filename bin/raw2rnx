@@ -1,0 +1,47 @@
+#!/bin/bash
+
+nowMinutes=$(date -u -d "$1 minutes ago" +%M)
+if [ $nowMinutes -gt 00 ] && [ $nowMinutes -lt 15 ]
+then
+  firstMinute=00
+  lastMinute=14
+elif [ $nowMinutes -ge 15 ] && [ $nowMinutes -lt 30 ]
+then
+  firstMinute=15
+  lastMinute=29
+elif [ $nowMinutes -ge 30 ] && [ $nowMinutes -lt 45 ]
+then
+  firstMinute=30
+  lastMinute=44
+elif [ $nowMinutes -ge 45 ] && [ $nowMinutes -lt 60 ]
+then
+  firstMinute=45
+  lastMinute=59
+else
+  echo "something wrong..."
+fi
+ts=$(date -u -d "$1 minutes ago"  "+%Y/%m/%d %H:")$firstMinute":00"
+te=$(date -u -d "$1 minutes ago"  "+%Y/%m/%d %H:")$lastMinute":59"
+
+echo $ts
+
+rawFile=$HM$(date -u -d "$1 minutes ago" +%Y%j%H)$firstMinute
+rnx3File=$HM"_R_"$(date -u -d "$1 minutes ago" +%Y%j%H)$firstMinute"_15M_01S_MO"
+
+rawPath="$RAWINPATH/"$(date -u -d "$1 minutes ago" "+%Y/%j/%H")/
+rnx3Path="$RNXOUTPATH/rinex/"$(date -u -d "$1 minutes ago" "+%Y/%j/%H")/
+
+mkdir -p /tmp/
+mkdir -p $rnx3Path
+cd /tmp
+
+convbin -f 5 -hm "$HM" -hn "$HN" -hr "$HR" -ha "$HA" -hp "$hp" -ho "$HO" -v "$RNXV" -ts "$ts" -te "$te" -od -os -o $rnx3File.rnx -d /tmp/ $rawPath$rawFile.$EXTENSION
+
+RNX2CRX -f /tmp/$rnx3File.rnx
+
+gzip -f /tmp/$rnx3File.crx
+
+mv /tmp/$rnx3File.crx.gz $rnx3Path
+rm /tmp/$rnx3File.rnx
+
+
