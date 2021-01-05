@@ -1,6 +1,7 @@
 #!/bin/bash
 
-nowMinutes=$(date -u -d "$1 minutes ago" +%M)
+refTime=$(( `date +%s`-$1))
+nowMinutes=$(date -u -d@$refTime +%M)
 if [ $nowMinutes -gt 00 ] && [ $nowMinutes -lt 15 ]
 then
   firstMinute=00
@@ -20,16 +21,16 @@ then
 else
   echo "something wrong..."
 fi
-ts=$(date -u -d "$1 minutes ago"  "+%Y/%m/%d %H:")$firstMinute":00"
-te=$(date -u -d "$1 minutes ago"  "+%Y/%m/%d %H:")$lastMinute":59"
+ts=$(date -u -d@$refTime  "+%Y/%m/%d %H:")$firstMinute":00"
+te=$(date -u -d@$refTime  "+%Y/%m/%d %H:")$lastMinute":59"
 
 echo $ts
 
-rawFile=$HM$(date -u -d "$1 minutes ago" +%Y%j%H)$firstMinute
-rnx3File=$HM"_R_"$(date -u -d "$1 minutes ago" +%Y%j%H)$firstMinute"_15M_01S_MO"
+rawFile=$HM$(date -u -d@$refTime +%Y%j%H)$firstMinute
+rnx3File=$HM"_R_"$(date -u -d@$refTime +%Y%j%H)$firstMinute"_15M_01S_MO"
 
-rawPath="$RAWINPATH/"$(date -u -d "$1 minutes ago" "+%Y/%j/%H")/
-rnx3Path="$RNXOUTPATH/rinex/"$(date -u -d "$1 minutes ago" "+%Y/%j/%H")/
+rawPath="$RAWINPATH/"$(date -u -d@$refTime "+%Y/%j/%H")/
+rnx3Path="$RNXOUTPATH/rinex/"$(date -u -d@$refTime "+%Y/%j/%H")/
 
 mkdir -p /tmp/
 mkdir -p $rnx3Path
