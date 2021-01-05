@@ -4,4 +4,4 @@ BASH_ENV=/etc/environment
 
 #m   h dom mon dow user   command
 10   0    *  *   *        /root/bin/delfiles 5 >> /var/log/supervisor/cron.log 2>&1
-*/15 *    *  *   *        /root/bin/raw2rnx >> /var/log/supervisor/cron.log 2>&1
+*/15 *    *  *   *        /root/bin/raw2rnx 1 >> /var/log/supervisor/cron.log 2>&1
