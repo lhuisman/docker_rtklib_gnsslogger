@@ -1,16 +1,15 @@
-# Using Ubuntu 20.04 LTS
-FROM ubuntu:20.04 as builder
+# Using alpine
+FROM alpine as builder
 
 # Installing required packages
-RUN apt-get update \
-        && DEBIAN_FRONTEND=noninteractive \
-	apt-get install -y \
-	    build-essential  \
-            gcc 
+RUN \
+  apk add \
+      tzdata \
+      build-base
 
 #set time zone and start ntp
 RUN ln -fs /usr/share/zoneinfo/Etc/UTC /etc/localtime
-		
+    
 # Create folder for source codes
 RUN mkdir /root/src \
   && mkdir /data
@@ -37,18 +36,14 @@ RUN cd /root/src/rnxcmp \
   && cp CRX2RNX /usr/local/bin/CRX2RNX
 
 
-# Using Ubuntu 20.04 LTS
-FROM ubuntu:20.04 as application
+# Using alpine
+FROM alpine as application
 
 # Installing required packages
-RUN apt-get update \
-        && DEBIAN_FRONTEND=noninteractive \
-	apt-get install -y \
-            bash \
-	    supervisor \
-	    tzdata \
-	    ntp \
-	    cron
+RUN apk add \
+      bash \
+      supervisor \
+      tzdata
 
 #set time zone and start ntp
 RUN ln -fs /usr/share/zoneinfo/Etc/UTC /etc/localtime
@@ -65,19 +60,19 @@ COPY bin /root/bin
 COPY conf /root/conf
 RUN chmod +x /root/bin/* 
 
-RUN cp -p /root/conf/cronfile.txt /etc/cron.d/cronfile
-RUN chmod 0644 /etc/cron.d/cronfile
-RUN crontab /etc/cron.d/cronfile
+RUN cp -p /root/conf/cronfile.txt /etc/crontabs/cronfile
+RUN chmod 0644 /etc/crontabs/cronfile
+RUN crontab /etc/crontabs/cronfile
 
 # Create folder for Supervisor log files
 RUN mkdir -p /var/log/supervisor
 
 # Copy configuration files for Supervisor
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY supervisord.conf /etc/supervisord.conf
 
 #Copy environment to env file to use it in cron
 RUN  ["/bin/bash", "-c", "declare -p | grep -Ev 'BASHOPTS|BASH_VERSINFO|EUID|PPID|SHELLOPTS|UID' >> /etc/environment"]
 
 EXPOSE 9001
 
-CMD ["/usr/bin/supervisord"]		
+CMD ["/usr/bin/supervisord"]    
