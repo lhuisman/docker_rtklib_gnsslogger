@@ -39,39 +39,23 @@ RUN cd /root/src/rnxcmp \
 # Using alpine
 FROM alpine as application
 
-# Installing required packages
-#RUN apk add \
-#      bash \
-#      supervisor \
-#      tzdata
-
-#set time zone and start ntp
-#RUN ln -fs /usr/share/zoneinfo/Etc/UTC /etc/localtime
-
+# Copy compiled binaries
 COPY --from=builder /usr/local/bin/str2str /usr/local/bin/
 COPY --from=builder /usr/local/bin/convbin /usr/local/bin/
 COPY --from=builder /usr/local/bin/RNX2CRX /usr/local/bin/
-#COPY --from=builder /usr/local/bin/CRX2RNX /usr/local/bin/
 
+# Make the binaries executable
 RUN chmod +x /usr/local/bin/* 
 
-
+# Copy scripts and crontab file
 COPY bin /root/bin
 COPY conf /root/conf
 RUN chmod +x /root/bin/* 
 
+# Configure crontab
 RUN cp -p /root/conf/cronfile.txt /etc/crontabs/cronfile
 RUN chmod 0644 /etc/crontabs/cronfile
 RUN crontab /etc/crontabs/cronfile
 
-# Create folder for Supervisor log files
-#RUN mkdir -p /var/log/supervisor
-
-# Copy configuration files for Supervisor
-#COPY supervisord.conf /etc/supervisord.conf
-
-#Copy environment to env file to use it in cron
-#RUN  ["/bin/bash", "-c", "declare -p | grep -Ev 'BASHOPTS|BASH_VERSINFO|EUID|PPID|SHELLOPTS|UID' >> /etc/environment"]
-
-#EXPOSE 9001
+# Start main script (crond and str2str)
 CMD ["/root/bin/logrcvr"]    
