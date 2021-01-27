@@ -1,6 +1,6 @@
-SHELL=/bin/bash
+#SHELL=/bin/bash
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-BASH_ENV=/etc/environment
+#BASH_ENV=/etc/environment
 
 #m   h dom mon dow user   command
 10   0    *  *   *        /root/bin/delfiles 5 >> /var/log/supervisor/cron.log 2>&1
