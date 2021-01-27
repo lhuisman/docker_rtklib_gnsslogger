@@ -40,18 +40,18 @@ RUN cd /root/src/rnxcmp \
 FROM alpine as application
 
 # Installing required packages
-RUN apk add \
-      bash \
-      supervisor \
-      tzdata
+#RUN apk add \
+#      bash \
+#      supervisor \
+#      tzdata
 
 #set time zone and start ntp
-RUN ln -fs /usr/share/zoneinfo/Etc/UTC /etc/localtime
+#RUN ln -fs /usr/share/zoneinfo/Etc/UTC /etc/localtime
 
 COPY --from=builder /usr/local/bin/str2str /usr/local/bin/
 COPY --from=builder /usr/local/bin/convbin /usr/local/bin/
 COPY --from=builder /usr/local/bin/RNX2CRX /usr/local/bin/
-COPY --from=builder /usr/local/bin/CRX2RNX /usr/local/bin/
+#COPY --from=builder /usr/local/bin/CRX2RNX /usr/local/bin/
 
 RUN chmod +x /usr/local/bin/* 
 
@@ -65,14 +65,13 @@ RUN chmod 0644 /etc/crontabs/cronfile
 RUN crontab /etc/crontabs/cronfile
 
 # Create folder for Supervisor log files
-RUN mkdir -p /var/log/supervisor
+#RUN mkdir -p /var/log/supervisor
 
 # Copy configuration files for Supervisor
-COPY supervisord.conf /etc/supervisord.conf
+#COPY supervisord.conf /etc/supervisord.conf
 
 #Copy environment to env file to use it in cron
-RUN  ["/bin/bash", "-c", "declare -p | grep -Ev 'BASHOPTS|BASH_VERSINFO|EUID|PPID|SHELLOPTS|UID' >> /etc/environment"]
+#RUN  ["/bin/bash", "-c", "declare -p | grep -Ev 'BASHOPTS|BASH_VERSINFO|EUID|PPID|SHELLOPTS|UID' >> /etc/environment"]
 
-EXPOSE 9001
-
-CMD ["/usr/bin/supervisord"]    
+#EXPOSE 9001
+CMD ["/root/bin/logrcvr"]    

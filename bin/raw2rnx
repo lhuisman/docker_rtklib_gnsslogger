@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 refTime=$(( `date +%s`-$1))
 nowMinutes=$(date -u -d@$refTime +%M)
