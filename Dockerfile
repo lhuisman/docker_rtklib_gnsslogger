@@ -3,13 +3,8 @@ FROM alpine as builder
 
 # Installing required packages
 RUN \
-  apk add \
-      tzdata \
-      build-base
+  apk add build-base
 
-#set time zone and start ntp
-RUN ln -fs /usr/share/zoneinfo/Etc/UTC /etc/localtime
-    
 # Create folder for source codes
 RUN mkdir /root/src \
   && mkdir /data
@@ -35,27 +30,26 @@ RUN cd /root/src/rnxcmp \
   && cp RNX2CRX /usr/local/bin/RNX2CRX \
   && cp CRX2RNX /usr/local/bin/CRX2RNX
 
+# Make the binaries executable
+RUN chmod +x /usr/local/bin/*
 
 # Using alpine
 FROM alpine as application
 
 # Copy compiled binaries
-COPY --from=builder /usr/local/bin/str2str /usr/local/bin/
-COPY --from=builder /usr/local/bin/convbin /usr/local/bin/
-COPY --from=builder /usr/local/bin/RNX2CRX /usr/local/bin/
+#COPY --from=builder /usr/local/bin/convbin /usr/local/bin/
+#COPY --from=builder /usr/local/bin/RNX2CRX /usr/local/bin/
+# Copy scripts and crontab file
+COPY root /root/
+#COPY conf /root/conf
 
 # Make the binaries executable
-RUN chmod +x /usr/local/bin/* 
-
-# Copy scripts and crontab file
-COPY bin /root/bin
-COPY conf /root/conf
-RUN chmod +x /root/bin/* 
-
 # Configure crontab
-RUN cp -p /root/conf/cronfile.txt /etc/crontabs/cronfile
-RUN chmod 0644 /etc/crontabs/cronfile
-RUN crontab /etc/crontabs/cronfile
+RUN chmod +x /root/bin/* \
+  && cp -p /root/conf/cronfile.txt /etc/crontabs/cronfile \
+  && chmod 0644 /etc/crontabs/cronfile \
+  && crontab /etc/crontabs/cronfile
+COPY --from=builder /usr/local/bin/str2str /usr/local/bin/convbin /usr/local/bin/RNX2CRX /usr/local/bin/
 
 # Start main script (crond and str2str)
 CMD ["/root/bin/logrcvr"]    
