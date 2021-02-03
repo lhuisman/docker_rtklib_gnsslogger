@@ -1,4 +1,4 @@
 #!/bin/sh
 crond
 #str2str -f 0 -in ntrip://gnss1.tudelft.nl:2101/DLFV00NLD1 -out file:///$RAWOUTPATH/%Y/%n/%h/$HM%Y%n%h%M.$EXTENSION::S=0.25 
-str2str -f 0 -in serial://$DEVICE -out file:///$RAWOUTPATH/%Y/%n/%h/$HM%Y%n%h%M.$EXTENSION::S=0.25 
+str2str -b 1 -f 0 -in serial://$DEVICE -out tcpsvr://:19001 -out file:///$RAWOUTPATH/%Y/%n/%h/$HM%Y%n%h%M.$EXTENSION::S=0.25 
