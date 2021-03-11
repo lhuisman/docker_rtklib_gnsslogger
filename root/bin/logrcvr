@@ -1,4 +1,10 @@
 #!/bin/sh
 crond
 #str2str -f 0 -in ntrip://gnss1.tudelft.nl:2101/DLFV00NLD1 -out file:///$RAWOUTPATH/%Y/%n/%h/$HM%Y%n%h%M.$EXTENSION::S=0.25 
-str2str -b 1 -f 0 $CMDFILE -in serial://$DEVICE:$BAUDRATE -out tcpsvr://:19001 -out file:///$RAWOUTPATH/%Y/%n/%h/$HM%Y%n%h%M.$EXTENSION::S=0.25 
+if [ -z "$NTRIPCASTER" ]
+then
+   #External NTRIPCASTER is not configured
+   str2str -b 1 -f 0 $CMDFILE -in serial://$DEVICE:$BAUDRATE -out tcpsvr://:19001 -out file:///$RAWOUTPATH/%Y/%n/%h/$HM%Y%n%h%M.$EXTENSION::S=0.25 
+else
+   str2str -b 1 -f 0 $CMDFILE -in serial://$DEVICE:$BAUDRATE -out tcpsvr://:19001 -out file:///$RAWOUTPATH/%Y/%n/%h/$HM%Y%n%h%M.$EXTENSION::S=0.25  -out ntrips://:$NTRIPPASS@$NTRIPCASTER/$MOUNTPOINT
+fi
