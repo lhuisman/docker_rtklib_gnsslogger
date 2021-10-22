@@ -1,6 +1,6 @@
 #!/bin/sh
 
-find $RAWOUTPATH -type f -name *.$EXTENSION -mtime $1 -exec rm -f {} \;
-find $RNXOUTPATH -type f -name *.gz -mtime $1 -exec rm -f {} \;
-
-
+find $RAWOUTPATH -type f -name *.$EXTENSION -mtime +$1 -exec rm -f {} \;
+find $RNXOUTPATH -type f -name *.gz -mtime +$1 -exec rm -f {} \;
+find $RAWOUTPATH -depth -type d -mtime +1 -empty -delete {}\;
+find $RNXOUTPATH -depth -type d -mtime +1 -empty -delete {}\;
