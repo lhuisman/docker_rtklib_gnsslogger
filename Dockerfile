@@ -12,12 +12,12 @@ RUN mkdir /root/src \
 # Copy and compile str2str and convbin (RTKLIB)
 COPY myRTKLIB /root/src/rtklib
 
-RUN cd /root/src/rtklib/consapp/str2str/gcc \
+RUN cd /root/src/rtklib/app/consapp/str2str/gcc \
   && make \
   && make install \
   && cd
 
-RUN cd /root/src/rtklib/consapp/convbin/gcc \
+RUN cd /root/src/rtklib/app/consapp/convbin/gcc \
   && make \
   && make install \
   && cd
