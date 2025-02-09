@@ -5,7 +5,6 @@ command="str2str -b 1 -f 0 $CMDFILE -in serial://$DEVICE:$BAUDRATE#$EXTENSION -o
 
 if [[ ! -z "$RAWOUTPATH" ]]
 then
-   #External NTRIPCASTER is not configured
    command="${command} -out file:///$RAWOUTPATH/%Y/%n/%h/$HM%Y%n%h%M.$EXTENSION::S=0.25"
 fi
 if [[ ! -z "$NTRIPCASTER" ]]
@@ -14,7 +13,7 @@ then
 fi
 if [[ ! -z "$NTRIPCASTERRTCM" ]]
 then
-   command="${command} -out ntrips://:$NTRIPPASSRTCM@$NTRIPCASTERRTCM/$MOUNTPOINTRTCM#rtcm3 -msg $NTRIPMSGRTCM -sta $HM -a $HAT,$HAN -px $HPX $HPY $HPZ -i $HRT"
+   command="${command} -out ntrips://:$NTRIPPASSRTCM@$NTRIPCASTERRTCM/$MOUNTPOINTRTCM#rtcm3 -msg $NTRIPMSGRTCM -sta $RTCMID -a $HAT,$HAN -px $HPX $HPY $HPZ -i $HRT,$HRV,$HRN"
 fi
 echo $command
 `$command`
