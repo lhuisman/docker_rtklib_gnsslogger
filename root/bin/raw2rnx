@@ -41,7 +41,7 @@ mkdir -p /tmp/
 mkdir -p $rnx3Path
 cd /tmp
 
-convbin -f 5 -hm "$HM" -hn "$HN" -hr "$HRA/$HRT/$HRV" -ha "$HAN/$HAT" -hp "$HPX/$HPY/$HPZ" -ho "$HO" -v "$RNXV" -ts "$ts" -te "$te" -od -os -o $rnx3File.rnx -d /tmp/ $rawPath$rawFile.$EXTENSION
+convbin -f 5 -hm "$HM" -hn "$HN" -hr "$HRN/$HRT/$HRV" -ha "$HAN/$HAT" -hp "$HPX/$HPY/$HPZ" -ho "$HO" -v "$RNXV" -ts "$ts" -te "$te" -od -os -o $rnx3File.rnx -d /tmp/ $rawPath$rawFile.$EXTENSION
 
 RNX2CRX -f /tmp/$rnx3File.rnx
 
