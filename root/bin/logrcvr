@@ -1,19 +1,21 @@
 #!/bin/sh
 crond
-#str2str -f 0 -in ntrip://gnss1.tudelft.nl:2101/DLFV00NLD1 -out file:///$RAWOUTPATH/%Y/%n/%h/$HM%Y%n%h%M.$EXTENSION::S=0.25 
-command="str2str -b 1 -f 0 $CMDFILE -in serial://$DEVICE:$BAUDRATE#$EXTENSION -out tcpsvr://:19001"
+#str2str -f 0 -in ntrip://gnss1.tudelft.nl:2101/DLFV00NLD1 -out file:///$RAWOUTPATH/%Y/%n/%h/$HM%Y%n%h%M.$EXTENSION::S=0.25
+opts="-b 1 -f 0 $CMDFILE -in serial://$DEVICE:$BAUDRATE#$EXTENSION -out tcpsvr://:19001"
 
 if [[ ! -z "$RAWOUTPATH" ]]
 then
-   command="${command} -out file:///$RAWOUTPATH/%Y/%n/%h/$HM%Y%n%h%M.$EXTENSION::S=0.25"
+   opts="${opts} -out file:///$RAWOUTPATH/%Y/%n/%h/$HM%Y%n%h%M.$EXTENSION::S=0.25"
 fi
 if [[ ! -z "$NTRIPCASTER" ]]
 then
-   command="${command} -out ntrips://:$NTRIPPASS@$NTRIPCASTER/$MOUNTPOINT"
+   opts="${opts} -out ntrips://:$NTRIPPASS@$NTRIPCASTER/$MOUNTPOINT"
 fi
 if [[ ! -z "$NTRIPCASTERRTCM" ]]
 then
-   command="${command} -out ntrips://:$NTRIPPASSRTCM@$NTRIPCASTERRTCM/$MOUNTPOINTRTCM#rtcm3 -msg $NTRIPMSGRTCM -sta $RTCMID -a $HAT,$HAN -px $HPX $HPY $HPZ -i $HRT,$HRV,$HRN"
+   opts="${opts} -out ntrips://:$NTRIPPASSRTCM@$NTRIPCASTERRTCM/$MOUNTPOINTRTCM#rtcm3 -msg \""$NTRIPMSGRTCM"\" -sta $RTCMID -a \""$HAT,$HAN"\" -px $HPX $HPY $HPZ -i \""$HRT,$HRV,$HRN"\""
 fi
-echo $command
-`$command`
+opts="${opts//\"/\'}"
+echo str2str "$opts" >  /tmp/start_str2str
+chmod +x /tmp/start_str2str
+/tmp/start_str2str
